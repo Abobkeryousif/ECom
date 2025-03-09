@@ -20,11 +20,11 @@ namespace Ecom.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync() 
+        public async Task<IActionResult> GetAllAsync()
         {
-        var product = await _unitOfWork.productRepository.GetAllAsync(x=> x.Categories , x=> x.photos);
+            var product = await _unitOfWork.productRepository.GetAllAsync(x => x.Categories, x => x.photos);
             var result = _mapper.Map<List<ProductDto>>(product);
-            if (product is null) 
+            if (product is null)
             {
                 return BadRequest();
             }
@@ -34,10 +34,10 @@ namespace Ecom.Api.Controllers
 
         [HttpGet]
         [Route("{Id}")]
-        public async Task<IActionResult> GetByIdAsync(int Id) 
+        public async Task<IActionResult> GetByIdAsync(int Id)
         {
-        var product = await _unitOfWork.productRepository.GetByIdAsync(Id, x=> x.Categories , x=>x.photos);
-            if (product is null) { 
+            var product = await _unitOfWork.productRepository.GetByIdAsync(Id, x => x.Categories, x => x.photos);
+            if (product is null) {
                 return BadRequest();
             }
             var result = _mapper.Map<ProductDto>(product);
@@ -45,13 +45,33 @@ namespace Ecom.Api.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> AddProduct(AddProductDto addProductDto)
-        { 
+        {
             //ارجع للفيديو رقم 22 بوضح الغكرة
-            await _unitOfWork.productRepository.AddAsync(addProductDto); 
-            return Ok();
+            await _unitOfWork.productRepository.AddAsync(addProductDto);
+            return Ok("Product Add Sccessfuly!");
         }
 
+        [HttpPut]
+        [Route("{Id}")]
+        
+        public async Task<IActionResult> UpdateAsync(UpdateProductDto updateProductDto) 
+        {
+            await _unitOfWork.productRepository.UpdateAsync(updateProductDto);
+            return Ok("Updated Complete!");
         }
+
+        [HttpDelete]
+        [Route("{Id}")]
+
+        public async Task<IActionResult> DeleteAsync(int Id)
+        {
+            var product = await _unitOfWork.productRepository.GetByIdAsync(Id, x => x.photos, m => m.Categories);
+            await _unitOfWork.productRepository.DeleteAsync(product);
+            return Ok("Delete Product Sccessful!");
+
+        }
+
+    }
 }
 
 

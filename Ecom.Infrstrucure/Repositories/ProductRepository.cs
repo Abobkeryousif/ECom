@@ -4,6 +4,7 @@ using Ecom.Core.Entities.Product;
 using Ecom.Core.Interface;
 using Ecom.Core.Services;
 using Ecom.Infrstrucure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,52 @@ namespace Ecom.Infrstrucure.Repositories
 
             }).ToList();
             await dbContext.Photo.AddRangeAsync(photo);
+            await dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task DeleteAsync(Product product)
+        {
+            var photo = await dbContext.Photo.Where(x => x.ProductId == product.Id).ToListAsync();
+
+            foreach (var item in photo)
+            {
+                imageService.DeleteAsync(item.ImageName);
+            }
+
+            dbContext.Products.Remove(product);
+            await dbContext.SaveChangesAsync();
+        }
+
+
+        public async Task<bool> UpdateAsync(UpdateProductDto updateProductDto)
+        {
+            if (updateProductDto is null) 
+            {
+                return false;
+            }
+            var FindProduct = await dbContext.Products.Include(m => m.Categories)
+                .Include(m=> m.photos).FirstOrDefaultAsync(x=> x.Id == updateProductDto.Id);
+            if(FindProduct is null) 
+            {
+                return false;
+            }
+            mapper.Map<UpdateProductDto>(FindProduct);
+            var photo = await dbContext.Photo.Where(x => x.ProductId == updateProductDto.Id).ToListAsync();
+
+            foreach (var item in photo)
+            {
+                imageService.DeleteAsync(item.ImageName);
+            }
+            dbContext.Photo.RemoveRange(photo);
+            var Imagepath = await imageService.AddImageAsync(updateProductDto.Photos, updateProductDto.Name);
+            var ListPhoto = Imagepath.Select(path => 
+            new Photo { 
+            ImageName = path,
+            ProductId = updateProductDto.Id,
+            }).ToList();
+
+            await dbContext.Photo.AddRangeAsync(ListPhoto);
             await dbContext.SaveChangesAsync();
             return true;
         }

@@ -46,7 +46,7 @@ namespace Ecom.Infrstrucure.Repositories
             return true;
         }
 
-        public async Task DeleteAsync(Product product)
+        public async Task DeleteAsyncs(Product product)
         {
             var photo = await dbContext.Photo.Where(x => x.ProductId == product.Id).ToListAsync();
 

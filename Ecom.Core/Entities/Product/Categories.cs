@@ -9,7 +9,7 @@ namespace Ecom.Core.Entities.Product
     public class Categories : BaseEntitiy<int>
     {
         public string Name { get; set; }
-        public string Descrpition { get; set; }
+        public string? Descrpition { get; set; }
 
         //public ICollection<Product> Products { get; set; } =new HashSet<Product>();
     }

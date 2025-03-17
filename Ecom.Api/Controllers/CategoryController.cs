@@ -62,15 +62,12 @@ namespace Ecom.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategoryAsync(CategoryDto categoryDto) 
         {
-            try {
+            
                 var category = _mapper.Map<Categories>(categoryDto);
                 await _work.categoryRepository.AddAsync(category);
                 return Ok("Item Has been Created!");
-            }
-            catch (Exception ex) 
-            {
-                return BadRequest(ex.Message);
-            }
+            
+            
         }
 
         [HttpPut]

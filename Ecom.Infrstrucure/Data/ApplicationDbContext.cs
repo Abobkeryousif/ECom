@@ -1,4 +1,6 @@
-﻿using Ecom.Core.Entities.Product;
+﻿using Ecom.Core.Entities;
+using Ecom.Core.Entities.Product;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Ecom.Infrstrucure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<UserApp>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -17,6 +19,8 @@ namespace Ecom.Infrstrucure.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Photo> Photo { get; set; }
         public virtual DbSet<Categories> Categories { get; set; }
+
+        public virtual DbSet<Address> Address { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -16,6 +16,7 @@ namespace Ecom.Infrstrucure.Data.Config
             builder.Property(x=> x.Name).IsRequired().HasMaxLength(33);
             builder.Property(x=> x.Id).IsRequired();
             builder.Property(x => x.NewPrice).IsRequired().HasColumnType("decimal(18,2)");//عشان يشيل خانتين بعد الفاصلة
+            builder.Property(x => x.OldPrice).IsRequired().HasColumnType("decimal(18,2)");
             builder.HasData(new Product
             {
                 Id = 1,

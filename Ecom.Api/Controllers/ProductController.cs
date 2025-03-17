@@ -65,8 +65,9 @@ namespace Ecom.Api.Controllers
 
         public async Task<IActionResult> DeleteAsync(int Id)
         {
-            var product = await _unitOfWork.productRepository.GetByIdAsync(Id, x => x.photos, m => m.Categories);
-            await _unitOfWork.productRepository.DeleteAsync(product);
+            var product = await _unitOfWork.productRepository.GetByIdAsync(Id, x => x.photos);
+            
+            await _unitOfWork.productRepository.DeleteAsyncs(product);
             return Ok("Delete Product Sccessful!");
 
         }

@@ -1,3 +1,4 @@
+using Ecom.Api.Middleware;
 using Ecom.Infrstrucure;
 using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
@@ -23,11 +24,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapOpenApi();
 }
-
+app.UseMiddleware<ExcpentionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

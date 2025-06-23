@@ -16,9 +16,9 @@ namespace Ecom.Infrstrucure.Repositories
 {
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly ApplicationDbContext dbContext;
-        private readonly IMapper mapper;
-        private readonly IImageService imageService;
+            private readonly ApplicationDbContext dbContext;
+            private readonly IMapper mapper;
+            private readonly IImageService imageService;
 
         public ProductRepository(ApplicationDbContext dbContext, IMapper mapper, IImageService imageService) : base(dbContext)
         {
@@ -29,6 +29,7 @@ namespace Ecom.Infrstrucure.Repositories
 
         public async Task<bool> AddAsync(AddProductDto addProductDto)
         {
+
             if (addProductDto == null) return false;
             var product = mapper.Map<Product>(addProductDto);
             await dbContext.AddAsync(product);

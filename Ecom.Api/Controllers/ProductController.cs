@@ -20,9 +20,10 @@ namespace Ecom.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending,[FromQuery]int pageNumber = 1, [FromQuery] int pageSize=30)
         {
-            var product = await _unitOfWork.productRepository.GetAllAsync(x => x.Categories, x => x.photos);
+            var product = await _unitOfWork.productRepository.GetAllAsync(filterOn,filterQuery,sortBy,isAscending??true,pageNumber,pageSize);
             var result = _mapper.Map<List<ProductDto>>(product);
             if (product is null)
             {

@@ -60,6 +60,36 @@ namespace Ecom.Infrstrucure.Repositories
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<Product>> GetAllAsync(string? filterOn = null, string? filterQuery = null, string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 30)
+        {
+            var product = dbContext.Products.Include("Categories").AsQueryable();
+
+            if(string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if (filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    product = product.Where(_=> _.Name.Contains(filterQuery));
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(sortBy) == false) 
+            {
+                if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    product = isAscending ? product.OrderBy(p=> p.Name) : product.OrderByDescending(p=> p.Name);
+                }
+
+                else if (sortBy.Equals("NewPrice", StringComparison.OrdinalIgnoreCase)) 
+                {
+                    product = isAscending ? product.OrderBy(p => p.NewPrice) : product.OrderByDescending(n => n.NewPrice);
+                }
+            }
+
+            var skipProduct = (pageNumber - 1) * pageSize;
+
+
+            return await product.Skip(skipProduct).Take(pageSize).ToListAsync();
+        }
 
         public async Task<bool> UpdateAsync(UpdateProductDto updateProductDto)
         {
@@ -67,6 +97,7 @@ namespace Ecom.Infrstrucure.Repositories
             {
                 return false;
             }
+
             var FindProduct = await dbContext.Products.Include(m => m.Categories)
                 .Include(m=> m.photos).FirstOrDefaultAsync(x=> x.Id == updateProductDto.Id);
             if(FindProduct is null) 
